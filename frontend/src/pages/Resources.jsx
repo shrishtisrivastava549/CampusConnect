@@ -7,6 +7,7 @@ import {
   FileText,
   ArrowRight,
   RefreshCw,
+  ExternalLink,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
@@ -30,9 +31,12 @@ function Resources() {
   ];
 
   const getIcon = (resource) => {
-    const value = `${resource.Category || ""} ${resource.Title || ""}`.toLowerCase();
+    const value = `${resource.Category || ""} ${
+      resource.Title || ""
+    }`.toLowerCase();
 
     if (value.includes("book")) return BookOpen;
+
     if (
       value.includes("device") ||
       value.includes("laptop") ||
@@ -42,6 +46,70 @@ function Resources() {
     }
 
     return FileText;
+  };
+
+  const getFileUrl = (resource) => {
+    const backendUrl =
+      "https://campusconnect-backend-0ms4.onrender.com";
+
+    const fileValue =
+      resource.fileUrl ||
+      resource.FileUrl ||
+      resource.fileURL ||
+      resource.FileURL ||
+      resource.file ||
+      resource.File ||
+      resource.filePath ||
+      resource.FilePath ||
+      resource.path ||
+      resource.Path ||
+      resource.url ||
+      resource.URL;
+
+    if (!fileValue) {
+      return null;
+    }
+
+    if (typeof fileValue === "object") {
+      const nestedUrl =
+        fileValue.url ||
+        fileValue.URL ||
+        fileValue.path ||
+        fileValue.Path;
+
+      if (!nestedUrl) {
+        return null;
+      }
+
+      if (
+        nestedUrl.startsWith("http://") ||
+        nestedUrl.startsWith("https://")
+      ) {
+        return nestedUrl;
+      }
+
+      return `${backendUrl}/${nestedUrl.replace(/^\/+/, "")}`;
+    }
+
+    if (
+      fileValue.startsWith("http://") ||
+      fileValue.startsWith("https://")
+    ) {
+      return fileValue;
+    }
+
+    return `${backendUrl}/${fileValue.replace(/^\/+/, "")}`;
+  };
+
+  const handleViewResource = (resource) => {
+    const fileUrl = getFileUrl(resource);
+
+    if (!fileUrl) {
+      alert("File is not available for this resource.");
+      return;
+    }
+
+    window.open(fileUrl, "_blank", "noopener,noreferrer");
   };
 
   const fetchResources = async () => {
@@ -56,6 +124,8 @@ function Resources() {
         : response.data.resources || [];
 
       setResources(data);
+
+      console.log("RESOURCE DATA:", data);
     } catch (err) {
       console.error("RESOURCE FETCH ERROR:", err);
 
@@ -118,7 +188,8 @@ function Resources() {
             </h1>
 
             <p className="mt-2 max-w-2xl text-sm text-slate-500">
-              Discover books, study material, devices and useful resources shared by your campus community.
+              Discover books, study material, devices and useful resources
+              shared by your campus community.
             </p>
           </div>
 
@@ -223,90 +294,122 @@ function Resources() {
 
         {/* RESOURCE CARDS */}
 
-        {!loading && !error && filteredResources.length > 0 && (
-          <div className="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {!loading &&
+          !error &&
+          filteredResources.length > 0 && (
+            <div className="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
 
-            {filteredResources.map((resource) => {
-              const Icon = getIcon(resource);
+              {filteredResources.map((resource) => {
+                const Icon = getIcon(resource);
+                const fileUrl = getFileUrl(resource);
 
-              return (
-                <div
-                  key={resource._id}
-                  className="group rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                      <Icon size={22} />
+                return (
+                  <div
+                    key={resource._id}
+                    className="group rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
+                  >
+
+                    <div className="flex items-start justify-between">
+
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                        <Icon size={22} />
+                      </div>
+
+                      <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600">
+                        {resource.Type || "Share"}
+                      </span>
+
                     </div>
 
-                    <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600">
-                      {resource.Type || "Share"}
-                    </span>
-                  </div>
+                    <h3 className="mt-5 text-lg font-semibold text-slate-900">
+                      {resource.Title}
+                    </h3>
 
-                  <h3 className="mt-5 text-lg font-semibold text-slate-900">
-                    {resource.Title}
-                  </h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-500">
+                      {resource.Description ||
+                        "No description available."}
+                    </p>
 
-                  <p className="mt-2 text-sm leading-6 text-slate-500">
-                    {resource.Description || "No description available."}
-                  </p>
-
-                  <div className="mt-4">
-                    <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">
-                      {resource.Category || "Other"}
-                    </span>
-                  </div>
-
-                  <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
-                    <div>
-                      <p className="text-xs text-slate-400">
-                        Shared by
-                      </p>
-
-                      <p className="mt-1 text-sm font-medium text-slate-700">
-                        {resource.Owner?.Name || "Campus Student"}
-                      </p>
+                    <div className="mt-4">
+                      <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">
+                        {resource.Category || "Other"}
+                      </span>
                     </div>
 
-                    <button className="flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700">
-                      View
-                      <ArrowRight
-                        size={15}
-                        className="transition group-hover:translate-x-1"
-                      />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
+                    <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
 
-          </div>
-        )}
+                      <div>
+                        <p className="text-xs text-slate-400">
+                          Shared by
+                        </p>
+
+                        <p className="mt-1 text-sm font-medium text-slate-700">
+                          {resource.Owner?.Name ||
+                            "Campus Student"}
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() =>
+                          handleViewResource(resource)
+                        }
+                        disabled={!fileUrl}
+                        className={`flex items-center gap-1 text-sm font-semibold ${
+                          fileUrl
+                            ? "text-blue-600 hover:text-blue-700"
+                            : "cursor-not-allowed text-slate-400"
+                        }`}
+                      >
+                        {fileUrl ? "View" : "No File"}
+
+                        {fileUrl ? (
+                          <ArrowRight
+                            size={15}
+                            className="transition group-hover:translate-x-1"
+                          />
+                        ) : (
+                          <ExternalLink size={15} />
+                        )}
+                      </button>
+
+                    </div>
+                  </div>
+                );
+              })}
+
+            </div>
+          )}
 
         {/* EMPTY */}
 
-        {!loading && !error && filteredResources.length === 0 && (
-          <div className="mt-5 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-            <BookOpen size={35} className="mx-auto text-slate-300" />
+        {!loading &&
+          !error &&
+          filteredResources.length === 0 && (
+            <div className="mt-5 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
 
-            <h3 className="mt-4 text-lg font-semibold text-slate-800">
-              No resources found
-            </h3>
+              <BookOpen
+                size={35}
+                className="mx-auto text-slate-300"
+              />
 
-            <p className="mt-2 text-sm text-slate-500">
-              There are no approved resources matching your search.
-            </p>
+              <h3 className="mt-4 text-lg font-semibold text-slate-800">
+                No resources found
+              </h3>
 
-            <Link
-              to="/resources/add"
-              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-            >
-              <Plus size={16} />
-              Add Resource
-            </Link>
-          </div>
-        )}
+              <p className="mt-2 text-sm text-slate-500">
+                There are no approved resources matching your search.
+              </p>
+
+              <Link
+                to="/resources/add"
+                className="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+              >
+                <Plus size={16} />
+                Add Resource
+              </Link>
+
+            </div>
+          )}
 
       </main>
     </AppLayout>
