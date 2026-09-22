@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 
 const connectDB = require("./config/db");
@@ -17,7 +18,10 @@ app.use(cors());
 app.use(express.json());
 
 // Serve uploaded files
-app.use("/uploads", express.static("uploads"));
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
 
 // =========================
 // ROUTES
@@ -53,7 +57,7 @@ app.use("/api/dashboard", dashboardRoutes);
 // =========================
 
 app.get("/", (req, res) => {
-    res.send("Campus Connect Backend Running");
+  res.send("Campus Connect Backend Running");
 });
 
 // =========================
@@ -63,5 +67,5 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
