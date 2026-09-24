@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from "react";
 import {
   FileText,
@@ -6,6 +7,8 @@ import {
   ExternalLink,
   BookOpen,
   RefreshCw,
+  Sparkles,
+  SlidersHorizontal,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -23,10 +26,6 @@ function Notes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // =========================
-  // FIXED COURSE OPTIONS
-  // =========================
-
   const courses = [
     "All",
     "MCA",
@@ -35,10 +34,6 @@ function Notes() {
     "BBA",
     "BCA",
   ];
-
-  // =========================
-  // FIXED SEMESTER OPTIONS
-  // =========================
 
   const semesters = [
     "All",
@@ -52,17 +47,12 @@ function Notes() {
     "8th",
   ];
 
-  // =========================
-  // FETCH NOTES
-  // =========================
-
   const fetchNotes = async () => {
     try {
       setLoading(true);
       setError("");
 
       const response = await api.get("/notes");
-
       const data = response.data;
 
       setNotes(
@@ -85,10 +75,6 @@ function Notes() {
   useEffect(() => {
     fetchNotes();
   }, []);
-
-  // =========================
-  // SEARCH + FILTER + SORT
-  // =========================
 
   const filteredNotes = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -143,12 +129,12 @@ function Notes() {
     sort,
   ]);
 
-  // =========================
-  // FILE URL
-  // =========================
-
   const getFileUrl = (filePath) => {
     if (!filePath) {
+      return null;
+    }
+
+    if (typeof filePath !== "string") {
       return null;
     }
 
@@ -156,398 +142,388 @@ function Notes() {
       return filePath;
     }
 
-    return `http://localhost:5000${filePath}`;
+    return `https://campusconnect-backend-0ms4.onrender.com${filePath}`;
+  };
+
+  const clearFilters = () => {
+    setSearch("");
+    setCourseFilter("All");
+    setSemesterFilter("All");
+    setSort("latest");
   };
 
   return (
     <AppLayout>
-      <main className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
+      <main className="relative min-h-screen overflow-hidden bg-slate-950 px-4 py-6 text-white sm:px-6 lg:px-8 lg:py-8">
 
-        {/* =========================
-            HEADER
-        ========================= */}
-
-        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-
-          <div>
-            <p className="text-sm font-medium text-blue-600">
-              Campus Learning
-            </p>
-
-            <h1 className="mt-1 text-3xl font-bold text-slate-900">
-              Notes
-            </h1>
-
-            <p className="mt-2 max-w-2xl text-sm text-slate-500">
-              Find and share useful notes with your campus community.
-            </p>
-          </div>
-
-          <Link
-            to="/notes/add"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700"
-          >
-            <Plus size={18} />
-            Add Notes
-          </Link>
-
+        {/* BACKGROUND GLOW */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -left-32 -top-32 h-80 w-80 rounded-full bg-blue-600/20 blur-3xl" />
+          <div className="absolute right-0 top-40 h-96 w-96 rounded-full bg-violet-600/15 blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
         </div>
 
-        {/* =========================
-            SEARCH + FILTERS
-        ========================= */}
+        <div className="relative mx-auto max-w-7xl">
 
-        <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          {/* HEADER */}
+          <section className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
 
-          <div className="grid gap-3 lg:grid-cols-4">
-
-            {/* SEARCH */}
-
-            <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3">
-
-              <Search
-                size={19}
-                className="shrink-0 text-slate-400"
-              />
-
-              <input
-                type="text"
-                value={search}
-                onChange={(e) =>
-                  setSearch(e.target.value)
-                }
-                placeholder="Search notes..."
-                className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
-              />
-
-            </div>
-
-            {/* COURSE */}
-
-            <select
-              value={courseFilter}
-              onChange={(e) =>
-                setCourseFilter(e.target.value)
-              }
-              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-blue-500"
-            >
-              {courses.map((course) => (
-                <option
-                  key={course}
-                  value={course}
-                >
-                  {course === "All"
-                    ? "All Courses"
-                    : course}
-                </option>
-              ))}
-            </select>
-
-            {/* SEMESTER */}
-
-            <select
-              value={semesterFilter}
-              onChange={(e) =>
-                setSemesterFilter(e.target.value)
-              }
-              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-blue-500"
-            >
-              {semesters.map((semester) => (
-                <option
-                  key={semester}
-                  value={semester}
-                >
-                  {semester === "All"
-                    ? "All Semesters"
-                    : semester}
-                </option>
-              ))}
-            </select>
-
-            {/* SORT */}
-
-            <select
-              value={sort}
-              onChange={(e) =>
-                setSort(e.target.value)
-              }
-              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-blue-500"
-            >
-              <option value="latest">
-                Latest First
-              </option>
-
-              <option value="oldest">
-                Oldest First
-              </option>
-            </select>
-
-          </div>
-
-          {/* FILTER SUMMARY */}
-
-          <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
-
-            <p className="text-sm text-slate-500">
-              {filteredNotes.length} note
-              {filteredNotes.length !== 1
-                ? "s"
-                : ""}{" "}
-              found
-            </p>
-
-            <button
-              type="button"
-              onClick={fetchNotes}
-              disabled={loading}
-              className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 disabled:opacity-50"
-            >
-              <RefreshCw
-                size={15}
-                className={
-                  loading
-                    ? "animate-spin"
-                    : ""
-                }
-              />
-
-              Refresh
-            </button>
-
-          </div>
-
-        </section>
-
-        {/* =========================
-            LOADING
-        ========================= */}
-
-        {loading && (
-          <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-10 text-center">
-
-            <RefreshCw
-              size={30}
-              className="mx-auto animate-spin text-blue-600"
-            />
-
-            <p className="mt-4 text-sm text-slate-500">
-              Loading notes...
-            </p>
-
-          </div>
-        )}
-
-        {/* =========================
-            ERROR
-        ========================= */}
-
-        {!loading && error && (
-          <div className="mt-8 rounded-2xl border border-red-200 bg-red-50 p-6">
-
-            <p className="text-sm text-red-600">
-              {error}
-            </p>
-
-            <button
-              type="button"
-              onClick={fetchNotes}
-              className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
-            >
-              Try Again
-            </button>
-
-          </div>
-        )}
-
-        {/* =========================
-            EMPTY STATE
-        ========================= */}
-
-        {!loading &&
-          !error &&
-          filteredNotes.length === 0 && (
-            <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
-
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                <BookOpen size={25} />
+            <div>
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-xs font-semibold text-blue-300">
+                <Sparkles size={14} />
+                Campus Learning
               </div>
 
-              <h2 className="mt-4 text-lg font-semibold text-slate-900">
-                No notes found
-              </h2>
+              <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                Notes
+              </h1>
 
-              <p className="mt-2 text-sm text-slate-500">
-                {search ||
-                courseFilter !== "All" ||
-                semesterFilter !== "All"
-                  ? "Try changing your search or filters."
-                  : "Be the first student to share notes."}
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
+                Find and share useful notes with your campus community.
+              </p>
+            </div>
+
+            <Link
+              to="/notes/add"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:-translate-y-0.5 hover:from-blue-500 hover:to-violet-500"
+            >
+              <Plus size={18} />
+              Add Notes
+            </Link>
+
+          </section>
+
+          {/* SEARCH + FILTERS */}
+          <section className="mt-8 rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl shadow-black/20 backdrop-blur-xl">
+
+            <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-200">
+              <SlidersHorizontal size={17} className="text-blue-400" />
+              Find the right notes
+            </div>
+
+            <div className="grid gap-3 lg:grid-cols-4">
+
+              {/* SEARCH */}
+              <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-slate-900/60 px-4 py-3 transition focus-within:border-blue-500/50 focus-within:ring-2 focus-within:ring-blue-500/10">
+                <Search
+                  size={19}
+                  className="shrink-0 text-slate-500"
+                />
+
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) =>
+                    setSearch(e.target.value)
+                  }
+                  placeholder="Search notes..."
+                  className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-500"
+                />
+              </div>
+
+              {/* COURSE */}
+              <select
+                value={courseFilter}
+                onChange={(e) =>
+                  setCourseFilter(e.target.value)
+                }
+                className="rounded-xl border border-white/10 bg-slate-900/80 px-4 py-3 text-sm text-slate-300 outline-none transition focus:border-blue-500/50"
+              >
+                {courses.map((course) => (
+                  <option
+                    key={course}
+                    value={course}
+                    className="bg-slate-900"
+                  >
+                    {course === "All"
+                      ? "All Courses"
+                      : course}
+                  </option>
+                ))}
+              </select>
+
+              {/* SEMESTER */}
+              <select
+                value={semesterFilter}
+                onChange={(e) =>
+                  setSemesterFilter(e.target.value)
+                }
+                className="rounded-xl border border-white/10 bg-slate-900/80 px-4 py-3 text-sm text-slate-300 outline-none transition focus:border-blue-500/50"
+              >
+                {semesters.map((semester) => (
+                  <option
+                    key={semester}
+                    value={semester}
+                    className="bg-slate-900"
+                  >
+                    {semester === "All"
+                      ? "All Semesters"
+                      : semester}
+                  </option>
+                ))}
+              </select>
+
+              {/* SORT */}
+              <select
+                value={sort}
+                onChange={(e) =>
+                  setSort(e.target.value)
+                }
+                className="rounded-xl border border-white/10 bg-slate-900/80 px-4 py-3 text-sm text-slate-300 outline-none transition focus:border-blue-500/50"
+              >
+                <option
+                  value="latest"
+                  className="bg-slate-900"
+                >
+                  Latest First
+                </option>
+
+                <option
+                  value="oldest"
+                  className="bg-slate-900"
+                >
+                  Oldest First
+                </option>
+              </select>
+
+            </div>
+
+            {/* FILTER SUMMARY */}
+            <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
+
+              <p className="text-sm text-slate-400">
+                <span className="font-semibold text-slate-200">
+                  {filteredNotes.length}
+                </span>{" "}
+                note
+                {filteredNotes.length !== 1
+                  ? "s"
+                  : ""}{" "}
+                found
               </p>
 
-              {search ||
-              courseFilter !== "All" ||
-              semesterFilter !== "All" ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearch("");
-                    setCourseFilter("All");
-                    setSemesterFilter("All");
-                    setSort("latest");
-                  }}
-                  className="mt-5 rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                >
-                  Clear Filters
-                </button>
-              ) : (
-                <Link
-                  to="/notes/add"
-                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-                >
-                  <Plus size={17} />
-                  Add Notes
-                </Link>
-              )}
+              <button
+                type="button"
+                onClick={fetchNotes}
+                disabled={loading}
+                className="inline-flex items-center gap-2 text-sm font-medium text-blue-400 transition hover:text-blue-300 disabled:opacity-50"
+              >
+                <RefreshCw
+                  size={15}
+                  className={
+                    loading
+                      ? "animate-spin"
+                      : ""
+                  }
+                />
+                Refresh
+              </button>
 
+            </div>
+          </section>
+
+          {/* LOADING */}
+          {loading && (
+            <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.05] p-12 text-center backdrop-blur-xl">
+              <RefreshCw
+                size={32}
+                className="mx-auto animate-spin text-blue-400"
+              />
+
+              <p className="mt-4 text-sm text-slate-400">
+                Loading notes...
+              </p>
             </div>
           )}
 
-        {/* =========================
-            NOTES GRID
-        ========================= */}
+          {/* ERROR */}
+          {!loading && error && (
+            <div className="mt-8 rounded-2xl border border-red-500/20 bg-red-500/10 p-6">
+              <p className="text-sm text-red-300">
+                {error}
+              </p>
 
-        {!loading &&
-          !error &&
-          filteredNotes.length > 0 && (
-            <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              <button
+                type="button"
+                onClick={fetchNotes}
+                className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500"
+              >
+                Try Again
+              </button>
+            </div>
+          )}
 
-              {filteredNotes.map((note) => {
-                const fileUrl = getFileUrl(
-                  note.File
-                );
+          {/* EMPTY STATE */}
+          {!loading &&
+            !error &&
+            filteredNotes.length === 0 && (
+              <div className="mt-8 rounded-2xl border border-dashed border-white/15 bg-white/[0.04] p-12 text-center backdrop-blur-xl">
 
-                return (
-                  <article
-                    key={note._id}
-                    className="flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-blue-400/20 bg-blue-500/10 text-blue-400">
+                  <BookOpen size={27} />
+                </div>
+
+                <h2 className="mt-5 text-xl font-bold text-white">
+                  No notes found
+                </h2>
+
+                <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">
+                  {search ||
+                  courseFilter !== "All" ||
+                  semesterFilter !== "All"
+                    ? "Try changing your search or filters."
+                    : "Be the first student to share notes with the campus community."}
+                </p>
+
+                {search ||
+                courseFilter !== "All" ||
+                semesterFilter !== "All" ? (
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="mt-5 rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10"
                   >
+                    Clear Filters
+                  </button>
+                ) : (
+                  <Link
+                    to="/notes/add"
+                    className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                  >
+                    <Plus size={17} />
+                    Add Notes
+                  </Link>
+                )}
 
-                    {/* ICON + STATUS */}
+              </div>
+            )}
 
-                    <div className="flex items-start justify-between">
+          {/* NOTES GRID */}
+          {!loading &&
+            !error &&
+            filteredNotes.length > 0 && (
+              <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
 
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                        <FileText size={21} />
+                {filteredNotes.map((note) => {
+                  const fileUrl = getFileUrl(note.File);
+
+                  return (
+                    <article
+                      key={note._id}
+                      className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] p-5 shadow-xl shadow-black/10 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-blue-400/30 hover:bg-white/[0.08] hover:shadow-2xl hover:shadow-blue-950/30"
+                    >
+
+                      {/* TOP */}
+                      <div className="flex items-start justify-between gap-4">
+
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-blue-400/20 bg-blue-500/10 text-blue-400 transition group-hover:bg-blue-500/15">
+                          <FileText size={22} />
+                        </div>
+
+                        <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
+                          Approved
+                        </span>
+
                       </div>
 
-                      <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600">
-                        Approved
-                      </span>
+                      {/* TITLE */}
+                      <h2 className="mt-5 line-clamp-2 text-lg font-bold leading-7 text-white">
+                        {note.Title}
+                      </h2>
 
-                    </div>
-
-                    {/* TITLE */}
-
-                    <h2 className="mt-4 line-clamp-2 text-lg font-bold text-slate-900">
-                      {note.Title}
-                    </h2>
-
-                    {/* DESCRIPTION */}
-
-                    <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-500">
-                      {note.Description ||
-                        "No description available."}
-                    </p>
-
-                    {/* DETAILS */}
-
-                    <div className="mt-4 space-y-2 border-t border-slate-100 pt-4">
-
-                      <div className="flex justify-between gap-3 text-sm">
-                        <span className="text-slate-400">
-                          Subject
-                        </span>
-
-                        <span className="text-right font-medium text-slate-700">
-                          {note.Subject || "—"}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between gap-3 text-sm">
-                        <span className="text-slate-400">
-                          Course
-                        </span>
-
-                        <span className="text-right font-medium text-slate-700">
-                          {note.Course || "—"}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between gap-3 text-sm">
-                        <span className="text-slate-400">
-                          Semester
-                        </span>
-
-                        <span className="text-right font-medium text-slate-700">
-                          {note.Semester || "—"}
-                        </span>
-                      </div>
-
-                    </div>
-
-                    {/* OWNER */}
-
-                    {note.Owner && (
-                      <p className="mt-4 text-xs text-slate-400">
-                        Shared by{" "}
-
-                        <span className="font-medium text-slate-500">
-                          {note.Owner.Name ||
-                            "Student"}
-                        </span>
+                      {/* DESCRIPTION */}
+                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-400">
+                        {note.Description ||
+                          "No description available."}
                       </p>
-                    )}
 
-                    {/* BUTTONS */}
+                      {/* DETAILS */}
+                      <div className="mt-5 space-y-3 border-t border-white/10 pt-4">
 
-                    <div className="mt-5 flex gap-2">
+                        <div className="flex justify-between gap-4 text-sm">
+                          <span className="text-slate-500">
+                            Subject
+                          </span>
 
-                      {fileUrl && (
-                        <a
-                          href={fileUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
-                        >
-                          <ExternalLink size={16} />
-                          View File
-                        </a>
+                          <span className="max-w-[65%] truncate text-right font-medium text-slate-300">
+                            {note.Subject || "—"}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between gap-4 text-sm">
+                          <span className="text-slate-500">
+                            Course
+                          </span>
+
+                          <span className="text-right font-medium text-slate-300">
+                            {note.Course || "—"}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between gap-4 text-sm">
+                          <span className="text-slate-500">
+                            Semester
+                          </span>
+
+                          <span className="text-right font-medium text-slate-300">
+                            {note.Semester || "—"}
+                          </span>
+                        </div>
+
+                      </div>
+
+                      {/* OWNER */}
+                      {note.Owner && (
+                        <p className="mt-4 text-xs text-slate-500">
+                          Shared by{" "}
+                          <span className="font-medium text-slate-400">
+                            {note.Owner.Name ||
+                              "Student"}
+                          </span>
+                        </p>
                       )}
 
-                      {note.DriveLink && (
-                        <a
-                          href={note.DriveLink}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                        >
-                          <ExternalLink size={16} />
-                          Drive
-                        </a>
-                      )}
+                      {/* BUTTONS */}
+                      <div className="mt-5 flex gap-2">
 
-                    </div>
+                        {fileUrl && (
+                          <a
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-950/20 transition hover:from-blue-500 hover:to-blue-400"
+                          >
+                            <ExternalLink size={16} />
+                            View File
+                          </a>
+                        )}
 
-                  </article>
-                );
-              })}
+                        {note.DriveLink && (
+                          <a
+                            href={note.DriveLink}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+                          >
+                            <ExternalLink size={16} />
+                            Drive
+                          </a>
+                        )}
 
-            </div>
-          )}
+                      </div>
 
+                    </article>
+                  );
+                })}
+
+              </div>
+            )}
+
+        </div>
       </main>
     </AppLayout>
   );
 }
 
 export default Notes;
+

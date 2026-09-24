@@ -178,11 +178,12 @@ function Explore() {
   };
 
   const LoadingCard = () => (
-    <div className="animate-pulse rounded-2xl border border-slate-200 bg-white p-5">
-      <div className="h-10 w-10 rounded-xl bg-slate-200" />
-      <div className="mt-4 h-5 w-3/4 rounded bg-slate-200" />
-      <div className="mt-3 h-4 w-full rounded bg-slate-100" />
-      <div className="mt-2 h-4 w-2/3 rounded bg-slate-100" />
+    <div className="animate-pulse rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+      <div className="h-11 w-11 rounded-xl bg-white/10" />
+      <div className="mt-5 h-5 w-3/4 rounded bg-white/10" />
+      <div className="mt-3 h-4 w-full rounded bg-white/5" />
+      <div className="mt-2 h-4 w-2/3 rounded bg-white/5" />
+      <div className="mt-5 h-3 w-1/3 rounded bg-white/5" />
     </div>
   );
 
@@ -197,6 +198,7 @@ function Explore() {
       : FolderKanban;
 
     const title = item.Title || "Untitled";
+
     const description =
       item.Description || "No description available.";
 
@@ -212,22 +214,30 @@ function Explore() {
       ? "/notes"
       : "/projects";
 
+    const iconStyle = isResource
+      ? "bg-blue-500/10 text-blue-400 group-hover:bg-blue-500/20"
+      : isNote
+      ? "bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20"
+      : "bg-purple-500/10 text-purple-400 group-hover:bg-purple-500/20";
+
     return (
       <Link
         to={link}
-        className="group block rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
+        className="group block rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.08] hover:shadow-2xl active:scale-[0.99]"
       >
         <div className="flex items-start justify-between gap-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+          <div
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition duration-300 group-hover:scale-110 ${iconStyle}`}
+          >
             <Icon size={20} />
           </div>
 
-          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500">
+          <span className="max-w-[55%] truncate rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-slate-500 transition group-hover:text-slate-300">
             {meta}
           </span>
         </div>
 
-        <h3 className="mt-4 line-clamp-1 text-base font-semibold text-slate-900 group-hover:text-blue-600">
+        <h3 className="mt-5 line-clamp-1 text-base font-semibold text-slate-100 transition group-hover:text-blue-400">
           {title}
         </h3>
 
@@ -235,110 +245,179 @@ function Explore() {
           {description}
         </p>
 
-        <div className="mt-4 flex items-center gap-2 text-xs text-slate-400">
-          <Clock size={14} />
-          {formatDate(item.createdAt)}
+        <div className="mt-5 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-slate-600">
+            <Clock size={14} />
+            {formatDate(item.createdAt)}
+          </div>
+
+          <ArrowRight
+            size={15}
+            className="text-slate-700 transition group-hover:translate-x-1 group-hover:text-blue-400"
+          />
         </div>
       </Link>
     );
   };
 
-  return (
-    <div className="min-h-screen bg-slate-50">
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        {/* HEADER */}
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <div className="flex items-center gap-2 text-blue-600">
-              <Sparkles size={18} />
+  const EmptyState = ({ icon: Icon, message }) => (
+    <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.03] p-10 text-center">
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-slate-600">
+        <Icon size={28} />
+      </div>
 
-              <span className="text-sm font-semibold">
-                Discover Campus
-              </span>
+      <p className="mt-4 text-sm text-slate-500">
+        {message}
+      </p>
+    </div>
+  );
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
+
+      {/* BACKGROUND GLOW */}
+
+      <div className="pointer-events-none absolute left-1/2 top-[-180px] h-[500px] w-[750px] -translate-x-1/2 rounded-full bg-blue-600/10 blur-[130px]" />
+
+      <div className="pointer-events-none absolute right-[-160px] top-[400px] h-[400px] w-[400px] rounded-full bg-purple-600/10 blur-[120px]" />
+
+      <div className="pointer-events-none absolute bottom-[-180px] left-[-100px] h-[350px] w-[350px] rounded-full bg-cyan-500/10 blur-[110px]" />
+
+      <main className="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+
+        {/* =========================
+            HEADER
+        ========================== */}
+
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+
+          <div>
+
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-xs font-semibold text-blue-300">
+              <Sparkles size={14} />
+              Discover Campus
             </div>
 
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+            <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
               Explore
             </h1>
 
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base">
               Discover useful resources, notes, and projects
               shared by your campus community.
             </p>
+
           </div>
 
           <button
             type="button"
             onClick={() => fetchExploreData(true)}
             disabled={refreshing}
-            className="flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-slate-400 shadow-lg backdrop-blur-md transition duration-300 hover:border-blue-400/30 hover:bg-white/10 hover:text-white active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 lg:self-auto"
           >
             <RefreshCw
               size={17}
-              className={refreshing ? "animate-spin" : ""}
+              className={
+                refreshing ? "animate-spin" : ""
+              }
             />
-            Refresh
+            {refreshing ? "Refreshing..." : "Refresh"}
           </button>
+
         </div>
 
-        {/* SEARCH */}
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        {/* =========================
+            SEARCH
+        ========================== */}
+
+        <div className="mt-7 max-w-5xl rounded-2xl border border-white/10 bg-white/5 p-3 shadow-xl backdrop-blur-xl sm:p-4">
+
           <div className="relative">
+
             <Search
               size={20}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
             />
 
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
               placeholder="Search resources, notes, projects..."
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-xl border border-white/10 bg-slate-950/50 py-3.5 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500/50 focus:bg-white/5 focus:ring-2 focus:ring-blue-500/10"
             />
+
           </div>
 
           {!loading && (
-            <p className="mt-3 text-xs text-slate-400">
-              {totalResults} result
-              {totalResults !== 1 ? "s" : ""} found
-            </p>
+            <div className="mt-3 flex items-center justify-between px-1">
+
+              <p className="text-xs text-slate-600">
+                {totalResults} result
+                {totalResults !== 1 ? "s" : ""} found
+              </p>
+
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
+                  className="text-xs font-medium text-blue-400 transition hover:text-blue-300"
+                >
+                  Clear search
+                </button>
+              )}
+
+            </div>
           )}
+
         </div>
 
-        {/* ERROR */}
+        {/* =========================
+            ERROR
+        ========================== */}
+
         {error && (
-          <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
+          <div className="mt-6 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
             {error}
           </div>
         )}
 
-        {/* RESOURCES */}
-        <section className="mt-8">
-          <div className="mb-4 flex items-center justify-between">
+        {/* =========================
+            RESOURCES
+        ========================== */}
+
+        <section className="mt-9">
+
+          <div className="mb-5 flex items-center justify-between gap-4">
+
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
                 <BookOpen size={20} />
               </div>
 
               <div>
-                <h2 className="font-semibold text-slate-900">
+                <h2 className="font-semibold text-white">
                   Resources
                 </h2>
 
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-600">
                   Study material and useful files
                 </p>
               </div>
+
             </div>
 
             <Link
               to="/resources"
-              className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
+              className="flex items-center gap-1 text-sm font-medium text-blue-400 transition hover:text-blue-300"
             >
               View all
               <ArrowRight size={16} />
             </Link>
+
           </div>
 
           {loading ? (
@@ -359,45 +438,48 @@ function Explore() {
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
-              <BookOpen
-                size={30}
-                className="mx-auto text-slate-300"
-              />
-
-              <p className="mt-3 text-sm text-slate-500">
-                No resources found.
-              </p>
-            </div>
+            <EmptyState
+              icon={BookOpen}
+              message="No resources found."
+            />
           )}
+
         </section>
 
-        {/* NOTES */}
+        {/* =========================
+            NOTES
+        ========================== */}
+
         <section className="mt-10">
-          <div className="mb-4 flex items-center justify-between">
+
+          <div className="mb-5 flex items-center justify-between gap-4">
+
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400">
                 <FileText size={20} />
               </div>
 
               <div>
-                <h2 className="font-semibold text-slate-900">
+                <h2 className="font-semibold text-white">
                   Notes
                 </h2>
 
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-600">
                   Notes shared by students
                 </p>
               </div>
+
             </div>
 
             <Link
               to="/notes"
-              className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
+              className="flex items-center gap-1 text-sm font-medium text-blue-400 transition hover:text-blue-300"
             >
               View all
               <ArrowRight size={16} />
             </Link>
+
           </div>
 
           {loading ? (
@@ -418,45 +500,48 @@ function Explore() {
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
-              <FileText
-                size={30}
-                className="mx-auto text-slate-300"
-              />
-
-              <p className="mt-3 text-sm text-slate-500">
-                No notes found.
-              </p>
-            </div>
+            <EmptyState
+              icon={FileText}
+              message="No notes found."
+            />
           )}
+
         </section>
 
-        {/* PROJECTS */}
+        {/* =========================
+            PROJECTS
+        ========================== */}
+
         <section className="mt-10 pb-10">
-          <div className="mb-4 flex items-center justify-between">
+
+          <div className="mb-5 flex items-center justify-between gap-4">
+
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400">
                 <FolderKanban size={20} />
               </div>
 
               <div>
-                <h2 className="font-semibold text-slate-900">
+                <h2 className="font-semibold text-white">
                   Projects
                 </h2>
 
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-600">
                   Interesting projects from your campus
                 </p>
               </div>
+
             </div>
 
             <Link
               to="/projects"
-              className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
+              className="flex items-center gap-1 text-sm font-medium text-blue-400 transition hover:text-blue-300"
             >
               View all
               <ArrowRight size={16} />
             </Link>
+
           </div>
 
           {loading ? (
@@ -477,18 +562,14 @@ function Explore() {
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
-              <FolderKanban
-                size={30}
-                className="mx-auto text-slate-300"
-              />
-
-              <p className="mt-3 text-sm text-slate-500">
-                No projects found.
-              </p>
-            </div>
+            <EmptyState
+              icon={FolderKanban}
+              message="No projects found."
+            />
           )}
+
         </section>
+
       </main>
     </div>
   );

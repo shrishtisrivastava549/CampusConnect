@@ -3,6 +3,8 @@ import {
   ArrowLeft,
   Plus,
   FolderKanban,
+  Link as LinkIcon,
+  Sparkles,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -18,25 +20,12 @@ function AddProject() {
   const [technology, setTechnology] = useState("");
   const [course, setCourse] = useState("");
   const [semester, setSemester] = useState("");
+  const [projectLink, setProjectLink] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // =========================
-  // COURSE OPTIONS
-  // =========================
-
-  const courses = [
-    "MCA",
-    "B.Tech",
-    "MBA",
-    "BBA",
-    "BCA",
-  ];
-
-  // =========================
-  // SEMESTER OPTIONS
-  // =========================
+  const courses = ["MCA", "B.Tech", "MBA", "BBA", "BCA"];
 
   const semesters = [
     "1st",
@@ -49,10 +38,6 @@ function AddProject() {
     "8th",
   ];
 
-  // =========================
-  // SUBMIT PROJECT
-  // =========================
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -60,64 +45,37 @@ function AddProject() {
     setError("");
 
     try {
-      const token = localStorage.getItem(
-        "campusconnect_token"
-      );
+      const token = localStorage.getItem("campusconnect_token");
 
       if (!token) {
-        const message =
-          "Login required. Please login again.";
-
-        setError(message);
-        toast.error(message);
-
+        toast.error("Login required.");
         navigate("/login");
         return;
       }
 
-      // =========================
-      // VALIDATION
-      // =========================
-
-      if (
-        !title.trim() ||
-        !description.trim()
-      ) {
-        const message =
-          "Project Title and Description are required.";
-
-        setError(message);
-        toast.error(message);
-
+      if (!title.trim() || !description.trim()) {
+        const msg = "Project Title and Description are required.";
+        setError(msg);
+        toast.error(msg);
         setLoading(false);
         return;
       }
 
       if (!course) {
-        const message =
-          "Please select a course.";
-
-        setError(message);
-        toast.error(message);
-
+        const msg = "Please select a course.";
+        setError(msg);
+        toast.error(msg);
         setLoading(false);
         return;
       }
 
       if (!semester) {
-        const message =
-          "Please select a semester.";
-
-        setError(message);
-        toast.error(message);
-
+        const msg = "Please select a semester.";
+        setError(msg);
+        toast.error(msg);
         setLoading(false);
         return;
       }
-
-      // =========================
-      // API REQUEST
-      // =========================
 
       await api.post(
         "/projects",
@@ -127,6 +85,7 @@ function AddProject() {
           Technology: technology.trim(),
           Course: course,
           Semester: semester,
+          ProjectLink: projectLink.trim(),
         },
         {
           headers: {
@@ -135,20 +94,13 @@ function AddProject() {
         }
       );
 
-      // =========================
-      // SUCCESS
-      // =========================
-
       toast.success(
         "Project submitted successfully! Waiting for admin approval."
       );
 
       navigate("/projects");
     } catch (err) {
-      console.error(
-        "ADD PROJECT ERROR:",
-        err
-      );
+      console.error("ADD PROJECT ERROR:", err);
 
       const message =
         err.response?.data?.message ||
@@ -163,218 +115,205 @@ function AddProject() {
 
   return (
     <AppLayout>
-      <main className="mx-auto max-w-3xl px-6 py-8 lg:px-8">
+      <main className="relative min-h-screen overflow-hidden bg-slate-950 px-4 py-6 text-white sm:px-6 lg:px-8 lg:py-8">
 
-        {/* BACK */}
-
-        <Link
-          to="/projects"
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-blue-600"
-        >
-          <ArrowLeft size={17} />
-          Back to Projects
-        </Link>
-
-        {/* HEADER */}
-
-        <div className="mt-6">
-
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-            <FolderKanban size={23} />
-          </div>
-
-          <p className="mt-5 text-sm font-medium text-blue-600">
-            Campus Projects
-          </p>
-
-          <h1 className="mt-1 text-3xl font-bold text-slate-900">
-            Add Project
-          </h1>
-
-          <p className="mt-2 text-sm text-slate-500">
-            Share your project and help other students learn from it.
-          </p>
-
+        {/* Background Glow */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -left-32 -top-32 h-80 w-80 rounded-full bg-blue-600/20 blur-3xl" />
+          <div className="absolute right-0 top-48 h-96 w-96 rounded-full bg-violet-600/15 blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
         </div>
 
-        {/* FORM */}
+        <div className="relative mx-auto max-w-3xl">
 
-        <form
-          onSubmit={handleSubmit}
-          className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-        >
+          {/* Back */}
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 transition hover:text-blue-400"
+          >
+            <ArrowLeft size={17} />
+            Back to Projects
+          </Link>
 
-          {/* PROJECT TITLE */}
-
-          <div>
-
-            <label className="text-sm font-semibold text-slate-700">
-              Project Title
-            </label>
-
-            <input
-              type="text"
-              value={title}
-              onChange={(e) =>
-                setTitle(e.target.value)
-              }
-              placeholder="e.g. CampusConnect Resource Platform"
-              required
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
-            />
-
-          </div>
-
-          {/* DESCRIPTION */}
-
-          <div className="mt-5">
-
-            <label className="text-sm font-semibold text-slate-700">
-              Description
-            </label>
-
-            <textarea
-              value={description}
-              onChange={(e) =>
-                setDescription(e.target.value)
-              }
-              placeholder="Explain what your project does..."
-              rows={6}
-              required
-              className="mt-2 w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
-            />
-
-          </div>
-
-          {/* TECHNOLOGY */}
-
-          <div className="mt-5">
-
-            <label className="text-sm font-semibold text-slate-700">
-              Technology
-            </label>
-
-            <input
-              type="text"
-              value={technology}
-              onChange={(e) =>
-                setTechnology(e.target.value)
-              }
-              placeholder="e.g. React, Node.js, MongoDB"
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
-            />
-
-            <p className="mt-2 text-xs text-slate-400">
-              You can mention multiple technologies separated by commas.
-            </p>
-
-          </div>
-
-          {/* COURSE + SEMESTER */}
-
-          <div className="mt-5 grid gap-5 sm:grid-cols-2">
-
-            {/* COURSE */}
-
-            <div>
-
-              <label className="text-sm font-semibold text-slate-700">
-                Course
-              </label>
-
-              <select
-                value={course}
-                onChange={(e) =>
-                  setCourse(e.target.value)
-                }
-                required
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-blue-500"
-              >
-
-                <option value="">
-                  Select Course
-                </option>
-
-                {courses.map((item) => (
-                  <option
-                    key={item}
-                    value={item}
-                  >
-                    {item}
-                  </option>
-                ))}
-
-              </select>
-
+          {/* Header */}
+          <div className="mt-7">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-xs font-semibold text-blue-300">
+              <Sparkles size={14} />
+              Campus Innovation
             </div>
 
-            {/* SEMESTER */}
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-blue-400/20 bg-blue-500/10 text-blue-400">
+                <FolderKanban size={23} />
+              </div>
 
-            <div>
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">
+                  Add Project
+                </h1>
 
-              <label className="text-sm font-semibold text-slate-700">
-                Semester
-              </label>
-
-              <select
-                value={semester}
-                onChange={(e) =>
-                  setSemester(e.target.value)
-                }
-                required
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-blue-500"
-              >
-
-                <option value="">
-                  Select Semester
-                </option>
-
-                {semesters.map((item) => (
-                  <option
-                    key={item}
-                    value={item}
-                  >
-                    {item}
-                  </option>
-                ))}
-
-              </select>
-
+                <p className="mt-1 text-sm text-slate-400">
+                  Showcase your project and help other students learn from it.
+                </p>
+              </div>
             </div>
-
           </div>
 
-          {/* ERROR */}
-
-          {error && (
-            <div className="mt-5 rounded-xl bg-red-50 p-4 text-sm text-red-600">
-              {error}
-            </div>
-          )}
-
-          {/* SUBMIT */}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          {/* Form */}
+          <form
+            onSubmit={handleSubmit}
+            className="mt-8 rounded-2xl border border-white/10 bg-white/[0.06] p-5 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-7"
           >
 
-            <Plus size={18} />
+            {/* Project Title */}
+            <div>
+              <label className="text-sm font-semibold text-slate-200">
+                Project Title
+              </label>
 
-            {loading
-              ? "Submitting..."
-              : "Submit Project"}
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g. CampusConnect Resource Platform"
+                required
+                className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-blue-500/60"
+              />
+            </div>
 
-          </button>
+            {/* Description */}
+            <div className="mt-5">
+              <label className="text-sm font-semibold text-slate-200">
+                Description
+              </label>
 
-          <p className="mt-3 text-center text-xs text-slate-400">
-            Your project will be reviewed by an administrator before appearing
-            publicly.
-          </p>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Explain what your project does..."
+                rows={5}
+                required
+                className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-blue-500/60"
+              />
+            </div>
 
-        </form>
+            {/* Technology */}
+            <div className="mt-5">
+              <label className="text-sm font-semibold text-slate-200">
+                Technology Stack
+              </label>
 
+              <input
+                type="text"
+                value={technology}
+                onChange={(e) => setTechnology(e.target.value)}
+                placeholder="React, Node.js, MongoDB..."
+                className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-blue-500/60"
+              />
+
+              <p className="mt-2 text-xs text-slate-500">
+                Separate multiple technologies with commas.
+              </p>
+            </div>
+
+            {/* Project Link */}
+            <div className="mt-5">
+              <label className="text-sm font-semibold text-slate-200">
+                GitHub / Drive / Live Demo Link
+              </label>
+
+              <div className="relative">
+                <LinkIcon
+                  size={18}
+                  className="absolute left-4 top-[27px] -translate-y-1/2 text-slate-500"
+                />
+
+                <input
+                  type="url"
+                  value={projectLink}
+                  onChange={(e) => setProjectLink(e.target.value)}
+                  placeholder="https://github.com/username/project"
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 pl-11 text-sm text-white outline-none placeholder:text-slate-600 focus:border-blue-500/60"
+                />
+              </div>
+
+              <p className="mt-2 text-xs text-slate-500">
+                Optional, but recommended.
+              </p>
+            </div>
+
+            {/* Course + Semester */}
+            <div className="mt-5 grid gap-5 sm:grid-cols-2">
+
+              <div>
+                <label className="text-sm font-semibold text-slate-200">
+                  Course
+                </label>
+
+                <select
+                  value={course}
+                  onChange={(e) => setCourse(e.target.value)}
+                  required
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-3 text-sm text-slate-300 outline-none focus:border-blue-500/60"
+                >
+                  <option value="">Select Course</option>
+
+                  {courses.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-slate-200">
+                  Semester
+                </label>
+
+                <select
+                  value={semester}
+                  onChange={(e) => setSemester(e.target.value)}
+                  required
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-3 text-sm text-slate-300 outline-none focus:border-blue-500/60"
+                >
+                  <option value="">Select Semester</option>
+
+                  {semesters.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+            </div>
+
+            {/* Error */}
+            {error && (
+              <div className="mt-5 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+                {error}
+              </div>
+            )}
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-3.5 font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:from-blue-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Plus size={18} />
+
+              {loading ? "Submitting..." : "Submit Project"}
+            </button>
+
+            <p className="mt-3 text-center text-xs text-slate-500">
+              Your project will be reviewed by an administrator before appearing
+              publicly.
+            </p>
+
+          </form>
+        </div>
       </main>
     </AppLayout>
   );

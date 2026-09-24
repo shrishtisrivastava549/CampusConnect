@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { ArrowLeft, Plus, HelpCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  Plus,
+  HelpCircle,
+  Sparkles,
+  MessageCircleQuestion,
+} from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -27,9 +33,7 @@ function AddQuery() {
         "campusconnect_token"
       );
 
-      // =========================
       // LOGIN CHECK
-      // =========================
 
       if (!token) {
         const message =
@@ -42,9 +46,7 @@ function AddQuery() {
         return;
       }
 
-      // =========================
       // VALIDATION
-      // =========================
 
       if (!title.trim()) {
         const message =
@@ -68,9 +70,7 @@ function AddQuery() {
         return;
       }
 
-      // =========================
       // QUERY DATA
-      // =========================
 
       const queryData = {
         Title: title.trim(),
@@ -80,9 +80,7 @@ function AddQuery() {
 
       console.log("QUERY DATA:", queryData);
 
-      // =========================
       // API REQUEST
-      // =========================
 
       await api.post(
         "/queries",
@@ -94,9 +92,7 @@ function AddQuery() {
         }
       );
 
-      // =========================
       // SUCCESS
-      // =========================
 
       toast.success(
         "Query submitted successfully!"
@@ -122,157 +118,210 @@ function AddQuery() {
 
   return (
     <AppLayout>
-      <main className="mx-auto max-w-3xl px-6 py-8 lg:px-8">
+      <main className="relative min-h-screen overflow-hidden bg-slate-950 px-4 py-6 sm:px-6 lg:px-8">
+        {/* BACKGROUND GLOW */}
 
-        {/* BACK */}
-
-        <Link
-          to="/queries"
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-blue-600"
-        >
-          <ArrowLeft size={17} />
-          Back to Queries
-        </Link>
-
-        {/* HEADER */}
-
-        <div className="mt-6">
-
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-            <HelpCircle size={23} />
-          </div>
-
-          <p className="mt-5 text-sm font-medium text-blue-600">
-            Campus Help
-          </p>
-
-          <h1 className="mt-1 text-3xl font-bold text-slate-900">
-            Ask a Query
-          </h1>
-
-          <p className="mt-2 text-sm text-slate-500">
-            Ask your campus community for help.
-          </p>
-
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -left-32 -top-32 h-80 w-80 rounded-full bg-blue-600/20 blur-3xl" />
+          <div className="absolute right-0 top-20 h-96 w-96 rounded-full bg-violet-600/15 blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl" />
         </div>
 
-        {/* FORM */}
+        <div className="relative mx-auto max-w-3xl">
+          {/* BACK */}
 
-        <form
-          onSubmit={handleSubmit}
-          className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-        >
-
-          {/* TITLE */}
-
-          <div>
-
-            <label className="text-sm font-semibold text-slate-700">
-              Query Title
-            </label>
-
-            <input
-              type="text"
-              value={title}
-              onChange={(e) =>
-                setTitle(e.target.value)
-              }
-              placeholder="e.g. How should I prepare for DSA?"
-              required
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
-            />
-
-          </div>
-
-          {/* DESCRIPTION */}
-
-          <div className="mt-5">
-
-            <label className="text-sm font-semibold text-slate-700">
-              Description
-            </label>
-
-            <textarea
-              value={description}
-              onChange={(e) =>
-                setDescription(e.target.value)
-              }
-              placeholder="Explain your question clearly..."
-              rows={7}
-              required
-              className="mt-2 w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
-            />
-
-          </div>
-
-          {/* CATEGORY */}
-
-          <div className="mt-5">
-
-            <label className="text-sm font-semibold text-slate-700">
-              Category
-            </label>
-
-            <select
-              value={category}
-              onChange={(e) =>
-                setCategory(e.target.value)
-              }
-              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500"
-            >
-              <option value="resource">
-                Resource
-              </option>
-
-              <option value="notes">
-                Notes
-              </option>
-
-              <option value="project">
-                Project
-              </option>
-
-              <option value="academic">
-                Academic
-              </option>
-
-              <option value="general">
-                General
-              </option>
-            </select>
-
-          </div>
-
-          {/* ERROR */}
-
-          {error && (
-            <div className="mt-5 rounded-xl bg-red-50 p-4 text-sm text-red-600">
-              {error}
-            </div>
-          )}
-
-          {/* SUBMIT */}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          <Link
+            to="/queries"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-400"
           >
+            <ArrowLeft size={17} />
+            Back to Queries
+          </Link>
 
-            <Plus size={18} />
+          {/* HERO */}
 
-            {loading
-              ? "Submitting..."
-              : "Post Query"}
+          <section className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-blue-600/20 via-slate-900/80 to-violet-600/20 p-6 shadow-2xl shadow-blue-950/30 backdrop-blur-xl sm:p-8">
+            <div className="flex items-start gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-blue-400/20 bg-blue-500/10 text-blue-400">
+                <MessageCircleQuestion size={27} />
+              </div>
 
-          </button>
+              <div>
+                <div className="mb-2 inline-flex items-center gap-2 text-xs font-semibold text-blue-300">
+                  <Sparkles size={14} />
+                  Campus Help
+                </div>
 
-          <p className="mt-3 text-center text-xs text-slate-400">
-            Your query will be visible to students on campus.
-          </p>
+                <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                  Ask a Query
+                </h1>
 
-        </form>
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  Ask your campus community for help,
+                  ideas, or guidance.
+                </p>
+              </div>
+            </div>
+          </section>
 
+          {/* FORM */}
+
+          <form
+            onSubmit={handleSubmit}
+            className="mt-6 rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-2xl backdrop-blur-xl sm:p-7"
+          >
+            {/* TITLE */}
+
+            <div>
+              <label className="text-sm font-semibold text-slate-200">
+                Query Title
+              </label>
+
+              <p className="mt-1 text-xs text-slate-600">
+                Give your question a clear and useful title.
+              </p>
+
+              <input
+                type="text"
+                value={title}
+                onChange={(e) =>
+                  setTitle(e.target.value)
+                }
+                placeholder="e.g. How should I prepare for DSA?"
+                required
+                className="mt-3 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3.5 text-sm text-white outline-none placeholder:text-slate-600 transition focus:border-blue-500/50 focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/5"
+              />
+            </div>
+
+            {/* DESCRIPTION */}
+
+            <div className="mt-6">
+              <label className="text-sm font-semibold text-slate-200">
+                Description
+              </label>
+
+              <p className="mt-1 text-xs text-slate-600">
+                Explain your question clearly so others
+                can understand and help.
+              </p>
+
+              <textarea
+                value={description}
+                onChange={(e) =>
+                  setDescription(e.target.value)
+                }
+                placeholder="Explain your question clearly..."
+                rows={7}
+                required
+                className="mt-3 w-full resize-none rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3.5 text-sm leading-6 text-white outline-none placeholder:text-slate-600 transition focus:border-blue-500/50 focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/5"
+              />
+            </div>
+
+            {/* CATEGORY */}
+
+            <div className="mt-6">
+              <label className="text-sm font-semibold text-slate-200">
+                Category
+              </label>
+
+              <p className="mt-1 text-xs text-slate-600">
+                Choose the category that best matches
+                your question.
+              </p>
+
+              <select
+                value={category}
+                onChange={(e) =>
+                  setCategory(e.target.value)
+                }
+                className="mt-3 w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3.5 text-sm text-slate-300 outline-none transition focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5"
+              >
+                <option
+                  value="resource"
+                  className="bg-slate-900"
+                >
+                  Resource
+                </option>
+
+                <option
+                  value="notes"
+                  className="bg-slate-900"
+                >
+                  Notes
+                </option>
+
+                <option
+                  value="project"
+                  className="bg-slate-900"
+                >
+                  Project
+                </option>
+
+                <option
+                  value="academic"
+                  className="bg-slate-900"
+                >
+                  Academic
+                </option>
+
+                <option
+                  value="general"
+                  className="bg-slate-900"
+                >
+                  General
+                </option>
+              </select>
+            </div>
+
+            {/* ERROR */}
+
+            {error && (
+              <div className="mt-6 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+                {error}
+              </div>
+            )}
+
+            {/* SUBMIT */}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-7 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-950/30 transition hover:-translate-y-0.5 hover:shadow-blue-900/40 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <Plus size={18} />
+                  Post Query
+                </>
+              )}
+            </button>
+
+            <p className="mt-4 text-center text-xs text-slate-600">
+              Your query will be visible to students on
+              campus.
+            </p>
+          </form>
+
+          {/* TIP */}
+
+          <div className="mt-5 flex gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <HelpCircle
+              size={18}
+              className="mt-0.5 shrink-0 text-blue-400"
+            />
+
+            <p className="text-xs leading-5 text-slate-500">
+              Tip: A specific title and detailed
+              description usually make it easier for
+              other students to understand your query.
+            </p>
+          </div>
+        </div>
       </main>
     </AppLayout>
   );

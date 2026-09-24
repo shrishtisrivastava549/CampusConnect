@@ -7,6 +7,11 @@ import {
   HelpCircle,
   Lightbulb,
   RefreshCw,
+  Sparkles,
+  CheckCircle2,
+  Clock3,
+  XCircle,
+  CircleDot,
 } from "lucide-react";
 
 import AppLayout from "../components/AppLayout";
@@ -142,198 +147,323 @@ function MyActivity() {
     fetchActivity();
   }, []);
 
-  const getStatusClasses = (status) => {
+  const getStatusConfig = (status) => {
     switch (status) {
       case "approved":
-        return "bg-green-100 text-green-700";
+        return {
+          label: "Approved",
+          classes:
+            "border-emerald-400/20 bg-emerald-500/10 text-emerald-300",
+          icon: CheckCircle2,
+        };
 
       case "pending":
-        return "bg-yellow-100 text-yellow-700";
+        return {
+          label: "Pending",
+          classes:
+            "border-amber-400/20 bg-amber-500/10 text-amber-300",
+          icon: Clock3,
+        };
 
       case "rejected":
-        return "bg-red-100 text-red-700";
+        return {
+          label: "Rejected",
+          classes:
+            "border-red-400/20 bg-red-500/10 text-red-300",
+          icon: XCircle,
+        };
 
       case "resolved":
-        return "bg-blue-100 text-blue-700";
+        return {
+          label: "Resolved",
+          classes:
+            "border-blue-400/20 bg-blue-500/10 text-blue-300",
+          icon: CheckCircle2,
+        };
 
       case "reviewed":
-        return "bg-purple-100 text-purple-700";
+        return {
+          label: "Reviewed",
+          classes:
+            "border-violet-400/20 bg-violet-500/10 text-violet-300",
+          icon: CheckCircle2,
+        };
 
       case "open":
-        return "bg-orange-100 text-orange-700";
+        return {
+          label: "Open",
+          classes:
+            "border-orange-400/20 bg-orange-500/10 text-orange-300",
+          icon: CircleDot,
+        };
 
       default:
-        return "bg-slate-100 text-slate-600";
+        return {
+          label: status || "Unknown",
+          classes:
+            "border-white/10 bg-white/[0.05] text-slate-400",
+          icon: CircleDot,
+        };
     }
   };
 
   return (
     <AppLayout>
-      <main className="mx-auto max-w-6xl px-6 py-8 lg:px-8">
+      <main className="relative min-h-screen overflow-hidden bg-slate-950 px-4 py-6 text-white sm:px-6 lg:px-8 lg:py-8">
 
-        {/* HEADER */}
+        {/* BACKGROUND GLOW */}
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -left-40 -top-40 h-[420px] w-[420px] rounded-full bg-blue-600/15 blur-3xl" />
 
-          <div>
-            <p className="text-sm font-medium text-blue-600">
-              Personal
-            </p>
+          <div className="absolute right-[-140px] top-24 h-[430px] w-[430px] rounded-full bg-violet-600/15 blur-3xl" />
 
-            <h1 className="mt-1 text-3xl font-bold text-slate-900">
-              My Activity
-            </h1>
-
-            <p className="mt-2 text-sm text-slate-500">
-              Track everything you have submitted on CampusConnect.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={fetchActivity}
-            disabled={loading}
-            className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
-          >
-            <RefreshCw
-              size={16}
-              className={
-                loading
-                  ? "animate-spin"
-                  : ""
-              }
-            />
-
-            Refresh
-          </button>
-
+          <div className="absolute bottom-[-180px] left-1/3 h-[420px] w-[420px] rounded-full bg-cyan-500/10 blur-3xl" />
         </div>
 
-        {/* ERROR */}
+        <div className="relative mx-auto max-w-6xl">
 
-        {error && (
-          <div className="mt-6 rounded-xl bg-red-50 p-4 text-sm text-red-600">
-            {error}
-          </div>
-        )}
+          {/* HEADER */}
 
-        {/* LOADING */}
+          <section className="rounded-3xl border border-white/10 bg-gradient-to-br from-blue-600/15 via-violet-600/10 to-white/[0.03] p-6 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-8">
 
-        {loading ? (
-          <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-10 text-center">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
 
-            <RefreshCw
-              className="mx-auto animate-spin text-blue-600"
-              size={28}
-            />
+              <div className="flex items-start gap-4">
 
-            <p className="mt-3 text-sm text-slate-500">
-              Loading your activity...
-            </p>
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-blue-400/20 bg-blue-500/10 text-blue-400">
+                  <Activity size={27} />
+                </div>
 
-          </div>
-        ) : activities.length === 0 ? (
+                <div>
 
-          /* EMPTY */
+                  <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-blue-300">
+                    <Sparkles size={12} />
+                    Personal Dashboard
+                  </div>
 
-          <div className="mt-10 rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
+                  <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                    My Activity
+                  </h1>
 
-            <Activity
-              size={44}
-              className="mx-auto text-slate-300"
-            />
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+                    Track everything you have submitted
+                    across CampusConnect.
+                  </p>
 
-            <h2 className="mt-4 text-lg font-semibold text-slate-700">
-              No Activity Yet
-            </h2>
+                </div>
 
-            <p className="mt-2 text-sm text-slate-400">
-              Your submissions and activity will appear here.
-            </p>
+              </div>
 
-          </div>
+              <button
+                type="button"
+                onClick={fetchActivity}
+                disabled={loading}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-blue-400/20 hover:bg-white/[0.1] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <RefreshCw
+                  size={17}
+                  className={
+                    loading
+                      ? "animate-spin"
+                      : ""
+                  }
+                />
+                Refresh
+              </button>
 
-        ) : (
+            </div>
 
-          /* ACTIVITY LIST */
+          </section>
 
-          <div className="mt-8 space-y-4">
+          {/* ACTIVITY SUMMARY */}
 
-            {activities.map((activity) => {
-              const Icon = activity.icon;
+          {!loading && !error && activities.length > 0 && (
+            <div className="mt-5 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 backdrop-blur-xl">
 
-              return (
-                <article
-                  key={`${activity.type}-${activity.id}`}
-                  className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-                >
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-400">
+                <Activity size={17} />
+              </div>
 
-                  <div className="flex gap-4">
+              <div>
+                <p className="text-sm font-semibold text-slate-200">
+                  {activities.length}{" "}
+                  {activities.length === 1
+                    ? "activity"
+                    : "activities"}{" "}
+                  found
+                </p>
 
-                    {/* ICON */}
+                <p className="text-xs text-slate-500">
+                  Your latest submissions are shown first.
+                </p>
+              </div>
 
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                      <Icon size={21} />
-                    </div>
+            </div>
+          )}
 
-                    {/* CONTENT */}
+          {/* ERROR */}
 
-                    <div className="min-w-0 flex-1">
+          {error && (
+            <div className="mt-6 flex items-start gap-3 rounded-2xl border border-red-400/20 bg-red-500/10 p-5 text-sm text-red-300">
+              <Activity
+                size={18}
+                className="mt-0.5 shrink-0"
+              />
+              <span>{error}</span>
+            </div>
+          )}
 
-                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          {/* LOADING */}
 
-                        <div>
+          {loading ? (
+            <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.045] p-14 text-center backdrop-blur-xl">
 
-                          <div className="flex flex-wrap items-center gap-2">
+              <RefreshCw
+                className="mx-auto animate-spin text-blue-400"
+                size={30}
+              />
 
-                            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                              {activity.type}
-                            </span>
+              <p className="mt-4 text-sm text-slate-400">
+                Loading your activity...
+              </p>
 
-                            <span
-                              className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${getStatusClasses(
-                                activity.status
-                              )}`}
-                            >
-                              {activity.status}
-                            </span>
+            </div>
+          ) : activities.length === 0 ? (
+
+            /* EMPTY */
+
+            <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-white/[0.035] p-14 text-center backdrop-blur-xl">
+
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-blue-400/20 bg-blue-500/10 text-blue-400">
+                <Activity size={30} />
+              </div>
+
+              <h2 className="mt-5 text-lg font-bold text-white">
+                No Activity Yet
+              </h2>
+
+              <p className="mt-2 text-sm text-slate-500">
+                Your submissions and activity will
+                appear here.
+              </p>
+
+            </div>
+
+          ) : (
+
+            /* ACTIVITY TIMELINE */
+
+            <div className="relative mt-8">
+
+              {/* TIMELINE LINE */}
+
+              <div className="absolute bottom-6 left-[23px] top-6 hidden w-px bg-gradient-to-b from-blue-500/40 via-violet-500/20 to-transparent sm:block" />
+
+              <div className="space-y-4">
+
+                {activities.map((activity) => {
+                  const Icon = activity.icon;
+
+                  const statusConfig =
+                    getStatusConfig(
+                      activity.status
+                    );
+
+                  const StatusIcon =
+                    statusConfig.icon;
+
+                  return (
+                    <article
+                      key={`${activity.type}-${activity.id}`}
+                      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-5 backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-white/15 hover:bg-white/[0.055] hover:shadow-xl hover:shadow-black/20"
+                    >
+
+                      {/* ACCENT */}
+
+                      <div className="absolute bottom-0 left-0 top-0 w-0.5 bg-gradient-to-b from-blue-500 to-violet-500 opacity-50 transition group-hover:opacity-100" />
+
+                      <div className="flex gap-4">
+
+                        {/* ICON */}
+
+                        <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-blue-400/20 bg-blue-500/10 text-blue-400 shadow-lg shadow-blue-950/10">
+                          <Icon size={21} />
+                        </div>
+
+                        {/* CONTENT */}
+
+                        <div className="min-w-0 flex-1">
+
+                          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+
+                            <div className="min-w-0">
+
+                              {/* BADGES */}
+
+                              <div className="flex flex-wrap items-center gap-2">
+
+                                <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                  {activity.type}
+                                </span>
+
+                                <span
+                                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${statusConfig.classes}`}
+                                >
+                                  <StatusIcon size={12} />
+                                  {statusConfig.label}
+                                </span>
+
+                              </div>
+
+                              {/* TITLE */}
+
+                              <h2 className="mt-3 text-lg font-semibold leading-7 text-slate-100 transition group-hover:text-white">
+                                {activity.title ||
+                                  "Untitled"}
+                              </h2>
+
+                              {/* DESCRIPTION */}
+
+                              {activity.description && (
+                                <p className="mt-2 line-clamp-2 max-w-3xl text-sm leading-6 text-slate-500">
+                                  {activity.description}
+                                </p>
+                              )}
+
+                              {/* DATE */}
+
+                              {activity.date && (
+                                <div className="mt-4 flex items-center gap-2 text-xs text-slate-600">
+                                  <Clock3 size={13} />
+
+                                  <span>
+                                    Submitted{" "}
+                                    {new Date(
+                                      activity.date
+                                    ).toLocaleString()}
+                                  </span>
+                                </div>
+                              )}
+
+                            </div>
 
                           </div>
-
-                          <h2 className="mt-3 text-lg font-semibold text-slate-900">
-                            {activity.title || "Untitled"}
-                          </h2>
-
-                          {activity.description && (
-                            <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">
-                              {activity.description}
-                            </p>
-                          )}
 
                         </div>
 
                       </div>
 
-                      {activity.date && (
-                        <p className="mt-4 text-xs text-slate-400">
-                          Submitted{" "}
-                          {new Date(
-                            activity.date
-                          ).toLocaleString()}
-                        </p>
-                      )}
+                    </article>
+                  );
+                })}
 
-                    </div>
+              </div>
 
-                  </div>
+            </div>
+          )}
 
-                </article>
-              );
-            })}
-
-          </div>
-        )}
-
+        </div>
       </main>
     </AppLayout>
   );

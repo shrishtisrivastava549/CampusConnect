@@ -10,6 +10,8 @@ import {
   CalendarDays,
   Save,
   RefreshCw,
+  User,
+  Sparkles,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -207,293 +209,242 @@ function Profile() {
     )
     .join("");
 
+  const infoCards = [
+    {
+      label: "College Email",
+      value: collegeEmail,
+      icon: Mail,
+      iconClass:
+        "border-blue-400/20 bg-blue-500/10 text-blue-400",
+    },
+    {
+      label: "Personal Email",
+      value: personalEmail,
+      icon: Mail,
+      iconClass:
+        "border-violet-400/20 bg-violet-500/10 text-violet-400",
+    },
+    {
+      label: "Phone",
+      value: phone,
+      icon: Phone,
+      iconClass:
+        "border-emerald-400/20 bg-emerald-500/10 text-emerald-400",
+    },
+    {
+      label: "Account Role",
+      value: role,
+      icon: Shield,
+      iconClass:
+        "border-purple-400/20 bg-purple-500/10 text-purple-400",
+    },
+    {
+      label: "College",
+      value: college,
+      icon: Building2,
+      iconClass:
+        "border-orange-400/20 bg-orange-500/10 text-orange-400",
+    },
+    {
+      label: "Department",
+      value: department,
+      icon: GraduationCap,
+      iconClass:
+        "border-pink-400/20 bg-pink-500/10 text-pink-400",
+    },
+    {
+      label: "Course",
+      value: course,
+      icon: GraduationCap,
+      iconClass:
+        "border-cyan-400/20 bg-cyan-500/10 text-cyan-400",
+    },
+    {
+      label: "Academic Year",
+      value: academicYear,
+      icon: CalendarDays,
+      iconClass:
+        "border-yellow-400/20 bg-yellow-500/10 text-yellow-400",
+    },
+    {
+      label: "Semester",
+      value: semester,
+      icon: GraduationCap,
+      iconClass:
+        "border-indigo-400/20 bg-indigo-500/10 text-indigo-400",
+    },
+  ];
+
   return (
     <AppLayout>
-      <main className="mx-auto max-w-5xl px-6 py-8 lg:px-8">
+      <main className="relative min-h-screen overflow-hidden bg-slate-950 px-4 py-6 text-white sm:px-6 lg:px-8 lg:py-8">
 
-        {/* HEADER */}
+        {/* BACKGROUND GLOW */}
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-medium text-blue-600">
-              Personal
-            </p>
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -left-40 -top-40 h-[420px] w-[420px] rounded-full bg-blue-600/15 blur-3xl" />
 
-            <h1 className="mt-1 text-3xl font-bold text-slate-900">
-              Profile
-            </h1>
+          <div className="absolute right-[-140px] top-20 h-[430px] w-[430px] rounded-full bg-violet-600/15 blur-3xl" />
 
-            <p className="mt-2 text-sm text-slate-500">
-              View and manage your CampusConnect account.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={openEditProfile}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 active:scale-[0.98]"
-          >
-            <Edit3 size={16} />
-            Edit Profile
-          </button>
+          <div className="absolute bottom-[-180px] left-1/3 h-[420px] w-[420px] rounded-full bg-cyan-500/10 blur-3xl" />
         </div>
 
+        <div className="relative mx-auto max-w-5xl">
 
-        {/* PROFILE CARD */}
+          {/* HEADER */}
 
-        <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section className="rounded-3xl border border-white/10 bg-gradient-to-br from-blue-600/15 via-violet-600/10 to-white/[0.03] p-6 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-8">
 
-          <div className="h-32 bg-gradient-to-r from-blue-600 to-indigo-600" />
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
 
-          <div className="px-6 pb-7">
+              <div className="flex items-start gap-4">
 
-            <div className="-mt-12 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-
-              <div className="flex items-end gap-4">
-
-                <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl border-4 border-white bg-blue-100 text-2xl font-bold text-blue-600 shadow-md">
-                  {initials || "S"}
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-blue-400/20 bg-blue-500/10 text-blue-400">
+                  <User size={27} />
                 </div>
 
-                <div className="pb-1">
+                <div>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-blue-300">
+                    <Sparkles size={12} />
+                    Personal
+                  </div>
 
-                  <h2 className="text-2xl font-bold text-slate-900">
-                    {name}
-                  </h2>
+                  <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                    Profile
+                  </h1>
 
-                  <p className="mt-1 text-sm capitalize text-slate-500">
-                    {role}
+                  <p className="mt-2 text-sm leading-6 text-slate-400">
+                    View and manage your CampusConnect account.
                   </p>
-
                 </div>
 
               </div>
+
+              <button
+                type="button"
+                onClick={openEditProfile}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-950/30 transition hover:scale-[1.02] hover:shadow-blue-900/40 active:scale-[0.98]"
+              >
+                <Edit3 size={16} />
+                Edit Profile
+              </button>
 
             </div>
 
+          </section>
 
-            {/* INFORMATION GRID */}
+          {/* PROFILE HERO */}
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <section className="relative mt-6 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/20 backdrop-blur-xl">
 
-              {/* COLLEGE EMAIL */}
+            <div className="relative h-36 overflow-hidden bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-700">
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center gap-3">
+              <div className="absolute -right-10 -top-20 h-56 w-56 rounded-full bg-white/10 blur-2xl" />
 
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                    <Mail size={19} />
+              <div className="absolute bottom-[-80px] left-1/3 h-44 w-44 rounded-full bg-cyan-400/10 blur-2xl" />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent" />
+
+            </div>
+
+            <div className="relative px-5 pb-7 sm:px-7">
+
+              <div className="-mt-12 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+
+                <div className="flex items-end gap-4">
+
+                  <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl border-4 border-slate-950 bg-gradient-to-br from-blue-500 to-violet-600 text-2xl font-bold text-white shadow-xl shadow-black/30">
+                    {initials || "S"}
                   </div>
 
-                  <div className="min-w-0">
-                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                      College Email
-                    </p>
+                  <div className="pb-1">
 
-                    <p className="mt-1 break-all text-sm font-medium text-slate-700">
-                      {collegeEmail}
-                    </p>
-                  </div>
+                    <h2 className="text-2xl font-bold text-white">
+                      {name}
+                    </h2>
 
-                </div>
-              </div>
-
-
-              {/* PERSONAL EMAIL */}
-
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center gap-3">
-
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
-                    <Mail size={19} />
-                  </div>
-
-                  <div className="min-w-0">
-                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                      Personal Email
-                    </p>
-
-                    <p className="mt-1 break-all text-sm font-medium text-slate-700">
-                      {personalEmail}
-                    </p>
-                  </div>
-
-                </div>
-              </div>
-
-
-              {/* PHONE */}
-
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center gap-3">
-
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-600">
-                    <Phone size={19} />
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                      Phone
-                    </p>
-
-                    <p className="mt-1 text-sm font-medium text-slate-700">
-                      {phone}
-                    </p>
-                  </div>
-
-                </div>
-              </div>
-
-
-              {/* ROLE */}
-
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center gap-3">
-
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
-                    <Shield size={19} />
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                      Account Role
-                    </p>
-
-                    <p className="mt-1 text-sm font-medium capitalize text-slate-700">
+                    <div className="mt-2 inline-flex items-center rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs font-medium capitalize text-slate-400">
                       {role}
-                    </p>
+                    </div>
+
                   </div>
 
                 </div>
-              </div>
 
-
-              {/* COLLEGE */}
-
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center gap-3">
-
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
-                    <Building2 size={19} />
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                      College
-                    </p>
-
-                    <p className="mt-1 text-sm font-medium text-slate-700">
-                      {college}
-                    </p>
-                  </div>
-
-                </div>
-              </div>
-
-
-              {/* DEPARTMENT */}
-
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center gap-3">
-
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-pink-100 text-pink-600">
-                    <GraduationCap size={19} />
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                      Department
-                    </p>
-
-                    <p className="mt-1 text-sm font-medium text-slate-700">
-                      {department}
-                    </p>
-                  </div>
-
-                </div>
-              </div>
-
-
-              {/* COURSE */}
-
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center gap-3">
-
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                    <GraduationCap size={19} />
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                      Course
-                    </p>
-
-                    <p className="mt-1 text-sm font-medium text-slate-700">
-                      {course}
-                    </p>
-                  </div>
-
-                </div>
-              </div>
-
-
-              {/* ACADEMIC YEAR */}
-
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center gap-3">
-
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-yellow-100 text-yellow-600">
-                    <CalendarDays size={19} />
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                      Academic Year
-                    </p>
-
-                    <p className="mt-1 text-sm font-medium text-slate-700">
-                      {academicYear}
-                    </p>
-                  </div>
-
-                </div>
-              </div>
-
-
-              {/* SEMESTER */}
-
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 sm:col-span-2">
-                <div className="flex items-center gap-3">
-
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-cyan-100 text-cyan-600">
-                    <GraduationCap size={19} />
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                      Semester
-                    </p>
-
-                    <p className="mt-1 text-sm font-medium text-slate-700">
-                      {semester}
-                    </p>
-                  </div>
-
-                </div>
               </div>
 
             </div>
 
-          </div>
+          </section>
 
-        </section>
+          {/* INFORMATION */}
 
+          <section className="mt-6">
+
+            <div className="mb-4 flex items-center gap-3">
+
+              <div className="h-8 w-1 rounded-full bg-gradient-to-b from-blue-500 to-violet-500" />
+
+              <div>
+                <h2 className="text-lg font-bold text-white">
+                  Account Information
+                </h2>
+
+                <p className="text-xs text-slate-500">
+                  Your personal and academic details
+                </p>
+              </div>
+
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+
+              {infoCards.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <div
+                    key={item.label}
+                    className="group rounded-2xl border border-white/10 bg-white/[0.035] p-4 backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-white/15 hover:bg-white/[0.055] hover:shadow-xl hover:shadow-black/20"
+                  >
+
+                    <div className="flex items-center gap-3">
+
+                      <div
+                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border ${item.iconClass}`}
+                      >
+                        <Icon size={19} />
+                      </div>
+
+                      <div className="min-w-0">
+
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+                          {item.label}
+                        </p>
+
+                        <p className="mt-1 break-all text-sm font-medium capitalize text-slate-300 transition group-hover:text-white">
+                          {item.value}
+                        </p>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+                );
+              })}
+
+            </div>
+
+          </section>
+
+        </div>
 
         {/* EDIT PROFILE MODAL */}
 
         {showEdit && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 px-4 py-8"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/80 px-4 py-8 backdrop-blur-md"
             onMouseDown={(event) => {
               if (event.target === event.currentTarget) {
                 closeEditProfile();
@@ -501,20 +452,27 @@ function Profile() {
             }}
           >
 
-            <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl">
+            <div className="w-full max-w-2xl rounded-3xl border border-white/10 bg-slate-900 p-6 shadow-2xl shadow-black/50 sm:p-7">
 
               {/* MODAL HEADER */}
 
               <div className="flex items-start justify-between gap-4">
 
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900">
+
+                  <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-blue-300">
+                    <Edit3 size={11} />
+                    Account Settings
+                  </div>
+
+                  <h2 className="mt-3 text-xl font-bold text-white">
                     Edit Profile
                   </h2>
 
                   <p className="mt-1 text-sm text-slate-500">
                     Update your personal and academic information.
                   </p>
+
                 </div>
 
                 <button
@@ -522,19 +480,18 @@ function Profile() {
                   onClick={closeEditProfile}
                   disabled={saving}
                   aria-label="Close edit profile"
-                  className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 disabled:opacity-50"
+                  className="rounded-xl border border-white/10 bg-white/[0.04] p-2 text-slate-400 transition hover:bg-white/[0.08] hover:text-white disabled:opacity-50"
                 >
-                  <X size={20} />
+                  <X size={19} />
                 </button>
 
               </div>
-
 
               {/* FORM */}
 
               <form
                 onSubmit={handleSave}
-                className="mt-6"
+                className="mt-7"
               >
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -542,7 +499,8 @@ function Profile() {
                   {/* NAME */}
 
                   <div className="sm:col-span-2">
-                    <label className="mb-2 block text-sm font-medium text-slate-700">
+
+                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Name
                     </label>
 
@@ -552,15 +510,16 @@ function Profile() {
                       value={formData.Name}
                       onChange={handleChange}
                       required
-                      className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-400/40 focus:bg-white/[0.07] focus:ring-2 focus:ring-blue-500/10"
                     />
-                  </div>
 
+                  </div>
 
                   {/* COURSE */}
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-700">
+
+                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Course
                     </label>
 
@@ -569,15 +528,16 @@ function Profile() {
                       name="Course"
                       value={formData.Course}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400/40 focus:bg-white/[0.07] focus:ring-2 focus:ring-blue-500/10"
                     />
-                  </div>
 
+                  </div>
 
                   {/* DEPARTMENT */}
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-700">
+
+                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Department
                     </label>
 
@@ -586,15 +546,16 @@ function Profile() {
                       name="Department"
                       value={formData.Department}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400/40 focus:bg-white/[0.07] focus:ring-2 focus:ring-blue-500/10"
                     />
-                  </div>
 
+                  </div>
 
                   {/* ACADEMIC YEAR */}
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-700">
+
+                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Academic Year
                     </label>
 
@@ -604,15 +565,16 @@ function Profile() {
                       value={formData.AcademicYear}
                       onChange={handleChange}
                       placeholder="e.g. 2025-2029"
-                      className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-400/40 focus:bg-white/[0.07] focus:ring-2 focus:ring-blue-500/10"
                     />
-                  </div>
 
+                  </div>
 
                   {/* SEMESTER */}
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-700">
+
+                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Semester
                     </label>
 
@@ -622,15 +584,16 @@ function Profile() {
                       value={formData.Semester}
                       onChange={handleChange}
                       placeholder="e.g. 5"
-                      className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-400/40 focus:bg-white/[0.07] focus:ring-2 focus:ring-blue-500/10"
                     />
-                  </div>
 
+                  </div>
 
                   {/* PERSONAL EMAIL */}
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-700">
+
+                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Personal Email
                     </label>
 
@@ -639,15 +602,16 @@ function Profile() {
                       name="PersonalEmail"
                       value={formData.PersonalEmail}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400/40 focus:bg-white/[0.07] focus:ring-2 focus:ring-blue-500/10"
                     />
-                  </div>
 
+                  </div>
 
                   {/* PHONE */}
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-700">
+
+                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Phone
                     </label>
 
@@ -656,39 +620,39 @@ function Profile() {
                       name="Phone"
                       value={formData.Phone}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400/40 focus:bg-white/[0.07] focus:ring-2 focus:ring-blue-500/10"
                     />
+
                   </div>
 
                 </div>
 
+                {/* NON EDITABLE */}
 
-                {/* NON-EDITABLE INFORMATION */}
+                <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] p-4">
 
-                <div className="mt-5 rounded-xl bg-slate-50 p-4">
-
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
                     Account Information
                   </p>
 
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
 
                     <div>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-slate-600">
                         College Email
                       </p>
 
-                      <p className="mt-1 break-all text-sm font-medium text-slate-700">
+                      <p className="mt-1 break-all text-sm font-medium text-slate-300">
                         {collegeEmail}
                       </p>
                     </div>
 
                     <div>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-slate-600">
                         Role
                       </p>
 
-                      <p className="mt-1 text-sm font-medium capitalize text-slate-700">
+                      <p className="mt-1 text-sm font-medium capitalize text-slate-300">
                         {role}
                       </p>
                     </div>
@@ -696,7 +660,6 @@ function Profile() {
                   </div>
 
                 </div>
-
 
                 {/* ACTIONS */}
 
@@ -706,7 +669,7 @@ function Profile() {
                     type="button"
                     onClick={closeEditProfile}
                     disabled={saving}
-                    className="rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+                    className="rounded-xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/[0.08] hover:text-white disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -714,7 +677,7 @@ function Profile() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-950/20 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
                   >
 
                     {saving ? (

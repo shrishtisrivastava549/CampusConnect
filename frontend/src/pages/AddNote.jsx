@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -6,6 +7,8 @@ import {
   FileText,
   X,
   Link as LinkIcon,
+  Sparkles,
+  BookOpen,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -45,10 +48,6 @@ function AddNote() {
     "8th",
   ];
 
-  // =========================
-  // FILE CHANGE
-  // =========================
-
   const handleFileChange = (event) => {
     const selectedFile = event.target.files?.[0];
 
@@ -74,10 +73,6 @@ function AddNote() {
     toast.success("File selected successfully.");
   };
 
-  // =========================
-  // REMOVE FILE
-  // =========================
-
   const removeFile = () => {
     setFile(null);
 
@@ -89,10 +84,6 @@ function AddNote() {
 
     toast.success("File removed.");
   };
-
-  // =========================
-  // SUBMIT
-  // =========================
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -196,294 +187,290 @@ function AddNote() {
 
   return (
     <AppLayout>
-      <main className="mx-auto max-w-3xl px-6 py-8 lg:px-8">
+      <main className="relative min-h-screen overflow-hidden bg-slate-950 px-4 py-6 text-white sm:px-6 lg:px-8 lg:py-8">
 
-        {/* BACK */}
-
-        <Link
-          to="/notes"
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-blue-600"
-        >
-          <ArrowLeft size={17} />
-          Back to Notes
-        </Link>
-
-        {/* HEADER */}
-
-        <div className="mt-6">
-          <p className="text-sm font-medium text-blue-600">
-            Campus Learning
-          </p>
-
-          <h1 className="mt-1 text-3xl font-bold text-slate-900">
-            Add Notes
-          </h1>
-
-          <p className="mt-2 text-sm text-slate-500">
-            Share your notes with your campus community.
-          </p>
+        {/* BACKGROUND GLOW */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -left-32 -top-32 h-80 w-80 rounded-full bg-blue-600/20 blur-3xl" />
+          <div className="absolute right-0 top-48 h-96 w-96 rounded-full bg-violet-600/15 blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
         </div>
 
-        {/* FORM */}
+        <div className="relative mx-auto max-w-3xl">
 
-        <form
-          onSubmit={handleSubmit}
-          className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-        >
+          {/* BACK */}
+          <Link
+            to="/notes"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 transition hover:text-blue-400"
+          >
+            <ArrowLeft size={17} />
+            Back to Notes
+          </Link>
 
-          {/* TITLE */}
+          {/* HEADER */}
+          <div className="mt-7">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-xs font-semibold text-blue-300">
+              <Sparkles size={14} />
+              Campus Learning
+            </div>
 
-          <div>
-            <label className="text-sm font-semibold text-slate-700">
-              Note Title
-            </label>
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-blue-400/20 bg-blue-500/10 text-blue-400">
+                <BookOpen size={23} />
+              </div>
 
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Data Structures Complete Notes"
-              required
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
-            />
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight text-white">
+                  Add Notes
+                </h1>
+
+                <p className="mt-1 text-sm text-slate-400">
+                  Share your notes with your campus community.
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* DESCRIPTION */}
+          {/* FORM */}
+          <form
+            onSubmit={handleSubmit}
+            className="mt-8 rounded-2xl border border-white/10 bg-white/[0.06] p-5 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-7"
+          >
 
-          <div className="mt-5">
-            <label className="text-sm font-semibold text-slate-700">
-              Description
-            </label>
-
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe what these notes contain..."
-              rows={4}
-              className="mt-2 w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
-            />
-          </div>
-
-          {/* SUBJECT + COURSE */}
-
-          <div className="mt-5 grid gap-5 sm:grid-cols-2">
-
-            {/* SUBJECT */}
-
+            {/* TITLE */}
             <div>
-              <label className="text-sm font-semibold text-slate-700">
-                Subject
+              <label className="text-sm font-semibold text-slate-200">
+                Note Title
               </label>
 
               <input
                 type="text"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                placeholder="e.g. Data Structures"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g. Data Structures Complete Notes"
                 required
-                className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
+                className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/10"
               />
             </div>
 
-            {/* COURSE */}
+            {/* DESCRIPTION */}
+            <div className="mt-5">
+              <label className="text-sm font-semibold text-slate-200">
+                Description
+              </label>
 
-            <div>
-              <label className="text-sm font-semibold text-slate-700">
-                Course
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe what these notes contain..."
+                rows={4}
+                className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/10"
+              />
+            </div>
+
+            {/* SUBJECT + COURSE */}
+            <div className="mt-5 grid gap-5 sm:grid-cols-2">
+
+              {/* SUBJECT */}
+              <div>
+                <label className="text-sm font-semibold text-slate-200">
+                  Subject
+                </label>
+
+                <input
+                  type="text"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  placeholder="e.g. Data Structures"
+                  required
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/10"
+                />
+              </div>
+
+              {/* COURSE */}
+              <div>
+                <label className="text-sm font-semibold text-slate-200">
+                  Course
+                </label>
+
+                <select
+                  value={course}
+                  onChange={(e) => setCourse(e.target.value)}
+                  required
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-3 text-sm text-slate-300 outline-none transition focus:border-blue-500/60"
+                >
+                  <option value="" className="bg-slate-900">
+                    Select Course
+                  </option>
+
+                  {courses.map((item) => (
+                    <option
+                      key={item}
+                      value={item}
+                      className="bg-slate-900"
+                    >
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+            </div>
+
+            {/* SEMESTER */}
+            <div className="mt-5">
+              <label className="text-sm font-semibold text-slate-200">
+                Semester
               </label>
 
               <select
-                value={course}
-                onChange={(e) => setCourse(e.target.value)}
+                value={semester}
+                onChange={(e) => setSemester(e.target.value)}
                 required
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-blue-500"
+                className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-3 text-sm text-slate-300 outline-none transition focus:border-blue-500/60"
               >
-                <option value="">
-                  Select Course
+                <option value="" className="bg-slate-900">
+                  Select Semester
                 </option>
 
-                {courses.map((item) => (
-                  <option key={item} value={item}>
+                {semesters.map((item) => (
+                  <option
+                    key={item}
+                    value={item}
+                    className="bg-slate-900"
+                  >
                     {item}
                   </option>
                 ))}
               </select>
             </div>
 
-          </div>
+            {/* FILE UPLOAD */}
+            <div className="mt-5">
+              <label className="text-sm font-semibold text-slate-200">
+                Note File
 
-          {/* SEMESTER */}
+                <span className="ml-1 font-normal text-slate-500">
+                  (optional if link is provided)
+                </span>
+              </label>
 
-          <div className="mt-5">
-
-            <label className="text-sm font-semibold text-slate-700">
-              Semester
-            </label>
-
-            <select
-              value={semester}
-              onChange={(e) => setSemester(e.target.value)}
-              required
-              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-blue-500"
-            >
-              <option value="">
-                Select Semester
-              </option>
-
-              {semesters.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-
-          </div>
-
-          {/* FILE UPLOAD */}
-
-          <div className="mt-5">
-
-            <label className="text-sm font-semibold text-slate-700">
-              Note File
-
-              <span className="ml-1 font-normal text-slate-400">
-                (optional if link is provided)
-              </span>
-            </label>
-
-            <label
-              htmlFor="note-file"
-              className="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 px-6 py-8 text-center transition hover:border-blue-300 hover:bg-blue-50"
-            >
-
-              <Upload
-                size={28}
-                className="text-blue-600"
-              />
-
-              <p className="mt-3 text-sm font-semibold text-slate-700">
-                Click to upload notes
-              </p>
-
-              <p className="mt-1 text-xs text-slate-400">
-                Any file type • Maximum 10 MB
-              </p>
-
-              <input
-                id="note-file"
-                type="file"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-
-            </label>
-
-            {/* SELECTED FILE */}
-
-            {file && (
-              <div className="mt-3 flex items-center justify-between rounded-xl border border-slate-200 bg-white p-3">
-
-                <div className="flex min-w-0 items-center gap-3">
-
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-                    <FileText size={19} />
-                  </div>
-
-                  <div className="min-w-0">
-
-                    <p className="truncate text-sm font-semibold text-slate-700">
-                      {file.name}
-                    </p>
-
-                    <p className="text-xs text-slate-400">
-                      {(file.size / (1024 * 1024)).toFixed(2)} MB
-                    </p>
-
-                  </div>
-
+              <label
+                htmlFor="note-file"
+                className="group mt-2 flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/10 bg-slate-900/50 px-6 py-9 text-center transition hover:border-blue-400/40 hover:bg-blue-500/[0.04]"
+              >
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-400/20 bg-blue-500/10 text-blue-400 transition group-hover:scale-105">
+                  <Upload size={26} />
                 </div>
 
-                <button
-                  type="button"
-                  onClick={removeFile}
-                  className="ml-3 rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-500"
-                  title="Remove file"
-                >
-                  <X size={18} />
-                </button>
+                <p className="mt-4 text-sm font-semibold text-slate-200">
+                  Click to upload notes
+                </p>
 
+                <p className="mt-1 text-xs text-slate-500">
+                  Any file type • Maximum 10 MB
+                </p>
+
+                <input
+                  id="note-file"
+                  type="file"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </label>
+
+              {/* SELECTED FILE */}
+              {file && (
+                <div className="mt-3 flex items-center justify-between rounded-xl border border-blue-400/20 bg-blue-500/[0.06] p-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-blue-400/20 bg-blue-500/10 text-blue-400">
+                      <FileText size={19} />
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-slate-200">
+                        {file.name}
+                      </p>
+
+                      <p className="text-xs text-slate-500">
+                        {(file.size / (1024 * 1024)).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={removeFile}
+                    className="ml-3 rounded-lg p-2 text-slate-500 transition hover:bg-red-500/10 hover:text-red-400"
+                    title="Remove file"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* DRIVE / EXTERNAL LINK */}
+            <div className="mt-5">
+              <label className="text-sm font-semibold text-slate-200">
+                External / Drive Link
+
+                <span className="ml-1 font-normal text-slate-500">
+                  (optional)
+                </span>
+              </label>
+
+              <div className="relative">
+                <LinkIcon
+                  size={18}
+                  className="absolute left-4 top-[27px] -translate-y-1/2 text-slate-500"
+                />
+
+                <input
+                  type="url"
+                  value={driveLink}
+                  onChange={(e) => setDriveLink(e.target.value)}
+                  placeholder="https://drive.google.com/..."
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 pl-11 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/10"
+                />
+              </div>
+
+              <p className="mt-2 text-xs text-slate-500">
+                You can provide a link instead of uploading a file.
+              </p>
+            </div>
+
+            {/* ERROR */}
+            {error && (
+              <div className="mt-5 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+                {error}
               </div>
             )}
 
-          </div>
+            {/* SUBMIT */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-3.5 font-semibold text-white shadow-lg shadow-blue-950/20 transition hover:-translate-y-0.5 hover:from-blue-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Plus size={18} />
 
-          {/* DRIVE / EXTERNAL LINK */}
+              {loading
+                ? "Submitting..."
+                : "Submit Notes"}
+            </button>
 
-          <div className="mt-5">
-
-            <label className="text-sm font-semibold text-slate-700">
-              External / Drive Link
-
-              <span className="ml-1 font-normal text-slate-400">
-                (optional)
-              </span>
-            </label>
-
-            <div className="relative">
-
-              <LinkIcon
-                size={18}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-              />
-
-              <input
-                type="url"
-                value={driveLink}
-                onChange={(e) => setDriveLink(e.target.value)}
-                placeholder="https://drive.google.com/..."
-                className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 pl-11 text-sm outline-none focus:border-blue-500"
-              />
-
-            </div>
-
-            <p className="mt-2 text-xs text-slate-400">
-              You can provide a link instead of uploading a file.
+            <p className="mt-3 text-center text-xs leading-5 text-slate-500">
+              Your notes will be reviewed by an administrator before appearing
+              publicly.
             </p>
 
-          </div>
-
-          {/* ERROR */}
-
-          {error && (
-            <div className="mt-5 rounded-xl bg-red-50 p-4 text-sm text-red-600">
-              {error}
-            </div>
-          )}
-
-          {/* SUBMIT */}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <Plus size={18} />
-
-            {loading
-              ? "Submitting..."
-              : "Submit Notes"}
-          </button>
-
-          <p className="mt-3 text-center text-xs text-slate-400">
-            Your notes will be reviewed by an administrator before appearing
-            publicly.
-          </p>
-
-        </form>
-
+          </form>
+        </div>
       </main>
     </AppLayout>
   );
 }
 
 export default AddNote;
+

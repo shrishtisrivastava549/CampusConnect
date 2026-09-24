@@ -11,9 +11,9 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background: #f8fafc;
-  font-family: Arial, sans-serif;
-  color: #0f172a;
+  background: #020617;
+  font-family: "Poppins", sans-serif;
+  color: #f8fafc;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -37,8 +37,8 @@ select {
 }
 
 ::selection {
-  background: #dbeafe;
-  color: #1e3a8a;
+  background: #3b82f6;
+  color: white;
 }
 
 ::-webkit-scrollbar {
@@ -47,14 +47,14 @@ select {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f8fafc;
+  background: #020617;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #334155;
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #475569;
 }
