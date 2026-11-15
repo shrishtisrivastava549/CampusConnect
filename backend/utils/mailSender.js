@@ -1,3 +1,4 @@
+
 const nodemailer = require("nodemailer");
 
 const mailSender = async (email, title, body) => {
@@ -5,36 +6,36 @@ const mailSender = async (email, title, body) => {
     const pass = process.env.MAIL_PASS;
 
     if (!user || !pass) {
-        const error = new Error(
-            "Email service is not configured. Set MAIL_USER and MAIL_PASS in the backend environment."
-        );
-        error.code = "EMAIL_NOT_CONFIGURED";
-        throw error;
+        console.error("OTP MAIL ERROR: MAIL_USER or MAIL_PASS missing");
+        throw new Error("Email service is not configured");
     }
 
-    // Use Gmail's SMTP endpoint directly. Avoid transporter.verify() here:
-    // it creates an extra SMTP connection before the actual send and can
-    // make OTP requests unnecessarily slow.
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
         secure: true,
         auth: { user, pass },
-        connectionTimeout: 10000,
-        greetingTimeout: 10000,
-        socketTimeout: 15000,
-        tls: {
-            minVersion: "TLSv1.2"
-        }
+        connectionTimeout: 15000,
+        greetingTimeout: 15000,
+        socketTimeout: 20000,
+        tls: { minVersion: "TLSv1.2" }
     });
 
     try {
-        return await transporter.sendMail({
+        const info = await transporter.sendMail({
             from: `"CampusConnect" <${user}>`,
             to: email,
             subject: title,
             html: body
         });
+
+        console.log("OTP EMAIL SENT:", info.messageId);
+        return info;
+
+    } catch (error) {
+        console.error("OTP MAIL ERROR:", error.code, error.message);
+        throw error;
+
     } finally {
         transporter.close();
     }
