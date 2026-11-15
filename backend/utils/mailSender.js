@@ -5,25 +5,24 @@ const mailSender = async (email, title, body) => {
     const user = process.env.MAIL_USER;
     const pass = process.env.MAIL_PASS;
 
-    // Check email configuration
+    // Check environment variables
     if (!user || !pass) {
-        console.error("OTP MAIL ERROR: MAIL_USER or MAIL_PASS is missing");
-
         const error = new Error(
-            "Email service is not configured. Set MAIL_USER and MAIL_PASS in backend environment."
+            "Email service is not configured. Set MAIL_USER and MAIL_PASS."
         );
 
         error.code = "EMAIL_NOT_CONFIGURED";
+
+        console.error("OTP MAIL ERROR:", error.message);
+
         throw error;
     }
 
-    // Gmail SMTP transporter
+    // Gmail SMTP configuration
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-
-        // Force IPv4 to avoid IPv6 ENETUNREACH error
+        port: 587,
+        secure: false,
         family: 4,
 
         auth: {
@@ -31,13 +30,15 @@ const mailSender = async (email, title, body) => {
             pass: pass
         },
 
-        connectionTimeout: 20000,
-        greetingTimeout: 20000,
-        socketTimeout: 30000,
+        requireTLS: true,
 
         tls: {
             minVersion: "TLSv1.2"
-        }
+        },
+
+        connectionTimeout: 30000,
+        greetingTimeout: 30000,
+        socketTimeout: 45000
     });
 
     try {
